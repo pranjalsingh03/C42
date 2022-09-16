@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'table.css' %}">
+{% endblock %}
+
+{% block body %}
+<body>
+<span id='cart' >
+    {% if cart != 0 %}
+        <div id="create_invoice" class="msg" style="position: fixed;top: 88%; display: block;cursor: pointer;" onclick=window.location.href="{% url 'invoice_create' %}" > [{{cart}}] Create Invoice  <i class="ti-new-window"></i></div>
+        {% else %}
+        <div id="create_invoice" class="msg" style="position: fixed;top: 88%; display: none;cursor: pointer;" onclick=window.location.href="{% url 'invoice_create' %}" > [{{cart}}] Create Invoice  <i class="ti-new-window"></i></div>
+        {% endif %} 
+        <span id="cartitems">
+        </span>
+</span> 
+	<div class="limiter" style="z-index: 0;" >
+		<div class="container-table100">
+			<div class="wrap-table100">
+                <div id="prod_list">
+				<div class="table">
+					<div class="row header">
+						<div class="cell"> Product Name [{{total}}] </div>
+						<div class="cell"> Category </div>
+						<div class="cell"> Price </div>
+						<div class="cell"> Buy Price</div>
+						<div class="cell"> Stock</div>
+                        {% if typ == 'allprod' %}
+						<div class="cell" onclick="Add()"> <i class="ti-bookmark"></i> Add </div>
+                        {% else %}
+						<div class="cell" > <i class="ti-bookmark"></i></div>
+                        {% endif %}
+					</div>
+                    {% if typ == 'allprod' %}
+                    <div class="row" id="new_prod_add" style="display: none;">
+                        <div class="cell" style="display: inline-flex;"> <i class="ti-pencil"></i> <input type="text" id="newprodname" placeholder="Type new product name"> </div>
+                        <div class="cell" > 
+                            <select id="newprodcat">
+                             {% for c in cats %}
+                             <option value="{{c}}">{{c}}</option>
+                             {% endfor %}
+                            </select>
+                        </div>
+                        <div class="cell"> <input type="number" style="width: 90%;" id="newprodprice" placeholder="SalePrice"> </div>
+                        <div class="cell"> <input type="number" id="newprodbuyprice" placeholder="Buyprice" style="width: 90%;"> </div>
+                        <div class="cell"> <input type="text" id="newprodstock" placeholder="Stock"  style="width: 90%;"> </div>
+                        <div class="cell" onclick="addprod()" style="padding: 15px;"> <i class="ti-cloud-up"></i>Add </div>
+                    </div>
+                    {% endif %}
+                    {% for p in Products %}
+					<div class="row">
+						<div class="cell" data-title="ProductName" id="{{p.id}}pn" > {{p.name}}</div>
+						<div class="cell" data-title="ProductCategory"> {{p.category}} </div>
+						<div class="cell" data-title="Productsale_price" > ₹ <span type='number'  id="{{p.id}}sp" style="width: 80%;">{{p.Sale_price}}</span></div>
+						<div class="cell" data-title="ProductBuyRate" > ₹<span style="width: 80%;" type='number' id="{{p.id}}bp"> {{p.Buy_price}} </span> </div>
+                        {% if p.stock == 0 %}
+						<div class="cell" id="prodstoc{{p.id}}" data-title="Productstock" style="color: red;"> {{p.stock}} </div>
+                        {% elif p.stock == 1 %}
+						<div class="cell" id="prodstoc{{p.id}}" data-title="Productstock" style="color: rgb(0, 3, 207);"> {{p.stock}} </div>
+                        {% elif p.stock == 2 %}
+						<div class="cell" id="prodstoc{{p.id}}" data-title="Productstock" style="color: rgb(140, 0, 255);"> {{p.stock}} </div>
+                        {% else %}
+						<div class="cell" id="prodstoc{{p.id}}" data-title="Productstock" > {{p.stock}} </div>
+                        {% endif %}
+						<div class="cell" data-title="actions">
+                            <span id="{{p.id}}" onclick="minu(this)">
+                                <i class="ti-control-backward"></i>
+                            </span> 
+                            <span id="{{p.id}}" onclick="plus(this)">
+                                 <i class="ti-control-forward"></i>
+                                </span> 
+                                <span  id="{{p.id}}" onclick="addinvoice_p(this)"> 
+                                    <i class="ti-gift"></i>
+                                </span>
+                                 <span>
+                                     <i onclick="prod_edit(this)" id="{{p.id}}" class="ti-brush"></i>
+                                    </span> 
+                                </div>
+					</div>
+                    {% endfor %}
+				</div>
+            </div>
+			</div>
+		</div>
+	</div>
+</body>
+{% endblock %}
+
+{% block js %}
+<script>
+
+    function Add(){
+        var ch=document.getElementById('new_prod_add').style.display
+        if(ch == 'none'){
+            document.getElementById('new_prod_add').style.display=''
+        }else{
+            document.getElementById('new_prod_add').style.display='none'
+        }
+    };
+    function prod_edit(btn){
+        btn.className='ti-check-box';
+        btn.attributes.onclick.value='save_ch(this)';
+        showmsg('edit mode on');
+        document.getElementById(String(btn.id)+'sp').contentEditable='true';
+        document.getElementById(String(btn.id)+'bp').contentEditable='true';
+        document.getElementById(String(btn.id)+'pn').contentEditable='true';
+    };
+    function save_ch(btn){
+        btn.className='ti-brush'
+        btn.attributes.onclick.value='prod_edit(this)'
+        var name=document.getElementById(String(btn.id)+'pn').innerText
+        var price1=document.getElementById(String(btn.id)+'sp').innerText
+        var price2=document.getElementById(String(btn.id)+'bp').innerText
+        document.getElementById(String(btn.id)+'sp').contentEditable='false';
+        document.getElementById(String(btn.id)+'bp').contentEditable='false';
+        document.getElementById(String(btn.id)+'pn').contentEditable='false';
+        $.ajax({
+                url:"{% url 'editproduct' %}",
+                type:'GET',
+                data:{
+                    p_id:btn.id,
+                    name:name,
+                    price1:price1,
+                    price2:price2,
+                },
+                success:function(e){
+                    showmsg(e)
+                },
+            });
+    }
+    function addprod(){
+        var name=document.getElementById('newprodname').value
+        var cat=document.getElementById('newprodcat').value
+        var price1=document.getElementById('newprodprice').value
+        var price2=document.getElementById('newprodbuyprice').value
+        var stock=document.getElementById('newprodstock').value
+        if( String(name).length == '0'){
+            showmsg('Please enter product name')
+        }
+        else if( String(price1).length == 0)
+        {
+            showmsg('Please enter product sale rate')
+        }
+        else if( String(price2).length == 0)
+        {
+            showmsg('Please enter product buy rate')
+        }
+        else if( String(stock).length == 0)
+        {
+            showmsg('Please enter product stock')
+        }else{
+            $.ajax({
+                url:"{% url 'addproducts' %}",
+                type:'GET',
+                data:{
+                    name:name,
+                    cat:cat,
+                    price1:price1,
+                    price2:price2,
+                    stock:stock,
+                },
+                success:function(e){
+                    $("#prod_list").load(location.href + " #prod_list")
+                    showmsg(e)
+                },
+            });
+        };
+    };
+    function plus(btn){
+        $.ajax({
+            url:"{% url 'plustock' %}",
+            type:'GET',
+            data:{
+                prodid:btn.id
+            },
+            success:function(e){
+                s=document.getElementById('prodstoc'+String(btn.id)).innerText
+                document.getElementById('prodstoc'+String(btn.id)).innerText = Number(s)+1
+                showmsg(e);
+            },
+
+        });
+    };
+    function minu(btn){
+        s=document.getElementById('prodstoc'+String(btn.id)).innerText
+        if(Number(s)==0){
+            showmsg('This product is 0 in stock')
+        }
+        else{
+        $.ajax({
+            url:"{% url 'minustock' %}",
+            type:'GET',
+            data:{
+                prodid:btn.id
+            },
+            success:function(e){
+                s=document.getElementById('prodstoc'+String(btn.id)).innerText
+                document.getElementById('prodstoc'+String(btn.id)).innerText = Number(s)-1
+                showmsg(e);
+            },
+    
+        });
+    };
+};
+    function addinvoice_p(btn){
+        $.ajax({
+            url:"{% url 'inv_prod' %}",
+            type:'GET',
+            data:{
+                prod_id:btn.id,
+            },
+            success:function(e){
+                document.getElementById('create_invoice').style.display='block';
+                $('#cart').load(location.href + ' #cart')
+                showmsg(e);
+            },
+        });
+    };
+
+</script>
+{% endblock %}

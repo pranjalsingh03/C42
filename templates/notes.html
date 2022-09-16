@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link href="{% static 'home.css' %}" rel="stylesheet" />
+<style>
+  .center {
+    margin: auto;
+    height: 45%;
+    width: 73%;
+    border-radius: 8px;
+  }
+  .noterow{
+    background-color: white;
+    box-shadow: rgba(113, 122, 132, 0.2) 0px 8px 24px;
+    border-radius: 7px;
+    height: fit-content;
+    padding: 2%;
+    margin-top: 2%;
+    overflow-wrap: anywhere;
+  }
+
+</style>
+{% endblock %}
+{% block body %}
+<body style="overflow: hidden;" >
+  <div style="width: 50%;height: 584px;float: left;display: flex;justify-content: center;">
+    <div class="center" style="background-color: white;">
+     <div style="
+     justify-content: center;
+     display: flex;color: white;
+     border-radius: 7px 7px 0px 0px;
+     background: #71ff71;padding: 1.6%;" >Create Note</div>
+     <textarea name="New-Note"  style="margin: auto;width: 100%;height: 81%;margin-top: 1%;border: 0px;" placeholder="Write your simple note !!" id="New-Note" cols="30" rows="10"></textarea>
+     <div style="
+     justify-content: center;
+     display: flex;color: white;
+     border-radius: 0px 0px 7px 7px;cursor: pointer;
+     background: #71ff71;padding: 1.6%;" onclick="savenote()" >Save</div>
+    </div>
+  </div>
+  <div  id="list_note" >
+  <div style="width: 50%;margin-top: 2%;height: 584px;float: right;display: flex;justify-content: center;overflow-y: scroll;">
+     <div style="width: 75%;">
+      <div style="
+      justify-content: center;
+      display: flex;color: white;
+      border-radius: 7px 7px 0px 0px;
+      background: #71ff71;padding: 1.6%;" > Notes List</div>
+      <span id="new_note"></span>
+      {% for n in notes %}
+      <div class="noterow"><div style="width: 100%;">{{n.date_add}}</div> <hr>
+        {{n.note_body}}</div>
+      {% endfor %}
+     </div>
+  </div>
+  </div>
+</body>
+{% endblock %}
+{% block js %}
+<script>
+  function savenote(){
+    note=document.getElementById('New-Note').value
+    $.ajax({
+      url:"{% url 'note' %}",
+      type:'POST',
+      data:{
+        Note_body:note,
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      },
+      success:function(e){
+        $('#list_note').load(location.href + " #list_note")
+        // document.getElementById('new_note').innerHTML +="<div style='width: 100%;'></div> <hr><div class='noterow'>"+String(note) + "</div>";
+        showmsg(e);
+      }
+    })
+  }
+</script>
+{% endblock %}

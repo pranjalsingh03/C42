@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'table.css' %}">
+<style>
+    .row .cell:nth-child(1){
+        width: 105px;
+    }
+    .row .cell:nth-child(4){
+        opacity: 100%;
+    }
+    .badge{
+    padding: 4%;
+    border-radius: 12px;
+    padding-left: 14px;
+    padding-right: 14px;
+    box-shadow: rgba(113, 122, 132, 0.2) 0px 8px 24px;
+    }
+	.row .cell:nth-child(2){
+		width: 90px;
+	}
+</style>
+{% endblock %}
+
+{% block body %}
+<body >
+	<div class="limiter" style="z-index: 0;" id="attend_list" >
+		<div class="container-table100">
+			<div class="wrap-table100">
+				<div class="table">
+					<div class="row header">
+						<div class="cell"> Staf Name </div>
+						<div class="cell"> Mobile_no </div>
+						<div class="cell"> Date </div>
+						<div class="cell"> State </div>
+						<div class="cell"> State </div>
+					</div>
+                    {% for s in stafs %}
+					<div class="row">
+						<div class="cell" data-title="Name">{{s.name}}</div>
+						<div class="cell" data-title="Contact"> {{s.contact}} </div>
+						<div class="cell" data-title="date"> {{today}} </div>
+						{% if s.state == 'None' %}
+						<div class="cell" data-title="actions" ><span class="badge" style="background:#a4ff9e;" id="{{s.id}}" onclick="adend(this)"> Present</span> </div>
+						<div class="cell" data-title="actions"><span class="badge"style='background:red;' id="{{s.id}}" onclick="adend(this)"> Absent</span></div>
+						{% elif s.state == 'Present' %}
+						<div class="cell" data-title="actions" ><span class="badge" style="background:#a4ff9e;" id="{{s.name}}" onclick="showmsg('{{s.name}} Present today')"> Present</span> </div>
+						<div class="cell" data-title="actions"><span class="badge"style='background:red;opacity: 20%;cursor: not-allowed;' id="{{s.name}}"> Absent</span></div>
+						{% elif s.state == 'Absent' %}
+						<div class="cell" data-title="actions" ><span class="badge" style="background:#a4ff9e;opacity:30% ;cursor: not-allowed;" id="{{s.name}}"> Present</span> </div>
+						<div class="cell" data-title="actions"><span class="badge"style='background:red;' onclick="showmsg('{{s.name}} Absent today')" id="{{s.name}}"> Absent</span></div>
+						{% endif %}
+					</div>
+                    {% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+{% endblock %}
+{% block js %}
+<script>
+	function adend(btn){
+		id=btn.id
+		state=btn.innerText
+		$.ajax({
+			url:"{% url 'staf' %}",
+			type:'POST',
+			data:{
+				at_id:id,
+				state:state,
+				csrfmiddlewaretoken: "{{ csrf_token }}",
+			},
+			success:function(e){
+				$('#attend_list').load("{% url 'staf' %}" + ' #attend_list')
+				showmsg(e);
+			},
+		});
+	}
+</script>
+{% endblock %}

@@ -1,0 +1,7 @@
+db.sqlite3
+backend/migrations/
+Date.txt
+db.sqlite3
+*.sqlite3
+date.txt
+s.json

@@ -1,0 +1,561 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'report_style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}"/>
+<style type="text/css">
+  .apexcharts-legend {
+    display: flex;
+    overflow: auto;
+    padding: 0 10px;
+  }
+  
+  .apexcharts-legend.position-bottom,
+  .apexcharts-legend.position-top {
+    flex-wrap: wrap
+  }
+  
+  .apexcharts-legend.position-right,
+  .apexcharts-legend.position-left {
+    flex-direction: column;
+    bottom: 0;
+  }
+  
+  .apexcharts-legend.position-bottom.left,
+  .apexcharts-legend.position-top.left,
+  .apexcharts-legend.position-right,
+  .apexcharts-legend.position-left {
+    justify-content: flex-start;
+  }
+  
+  .apexcharts-legend.position-bottom.center,
+  .apexcharts-legend.position-top.center {
+    justify-content: center;
+  }
+  
+  .apexcharts-legend.position-bottom.right,
+  .apexcharts-legend.position-top.right {
+    justify-content: flex-end;
+  }
+  
+  .apexcharts-legend-series {
+    cursor: pointer;
+    line-height: normal;
+  }
+  
+  .apexcharts-legend.position-bottom .apexcharts-legend-series,
+  .apexcharts-legend.position-top .apexcharts-legend-series {
+    display: flex;
+    align-items: center;
+  }
+  
+  .apexcharts-legend-text {
+    position: relative;
+    font-size: 14px;
+  }
+  
+  .apexcharts-legend-text *,
+  .apexcharts-legend-marker * {
+    pointer-events: none;
+  }
+  
+  .apexcharts-legend-marker {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 3px;
+  }
+  
+  .apexcharts-legend.right .apexcharts-legend-series,
+  .apexcharts-legend.left .apexcharts-legend-series {
+    display: inline-block;
+  }
+  
+  .apexcharts-legend-series.no-click {
+    cursor: auto;
+  }
+  
+  .apexcharts-legend .apexcharts-hidden-zero-series,
+  .apexcharts-legend .apexcharts-hidden-null-series {
+    display: none !important;
+  }
+  
+  .inactive-legend {
+    opacity: 0.45;
+  }
+  </style>
+  <style>
+        body {
+    background: url("/static/background.jpg") no-repeat center;
+    background-size: cover;
+    background-attachment: fixed;
+    }
+  </style>
+{% endblock %}
+{% block body %}
+<body>
+<span id="dashbody">
+<div class="main_content_iner overly_inner" style="margin: 10%;margin-top: 3%;">
+  <div class="container-fluid p-0 ">
+    <!-- page title  -->
+    <div class="row">
+      <div class="col-12">
+        <div class="page_title_box d-flex flex-wrap align-items-center justify-content-between">
+          <div class="page_title_right">
+            <div class="page_date_button d-flex align-items-center" style="font-size: 30px;"> <i class="ti-receipt"></i>{{mont}} Report</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row ">
+      <div class="col-xl-8 " style="display: flex;justify-content: center;">
+        <div class="page_title_left d-flex align-items-center" onclick=window.location.href="{% url 'home' %}">
+          <h3 class="f_s_25 f_w_700 dark_text mr_30"><img src="{% static 'logo2.png' %}" width="120%" alt="" srcset=""></h3>
+        </div>
+      </div>
+      <div class="col-xl-4 ">
+        <div class="white_card card_height_100 mb_30 user_crm_wrapper">
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="single_crm" style="height: 95%;">
+                <div class="crm_head d-flex align-items-center justify-content-between">
+                  <div class="thumb">
+                     <i class="ti-user"></i> </div> 
+                     </div>
+                <div class="crm_body">
+                  <h4>{{cust_total}}</h4>
+                  <p>New Customers</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="single_crm "  style="height: 95%;">
+                <div class="crm_head crm_bg_1 d-flex align-items-center justify-content-between">
+                  <div class="thumb"> <i class="ti-stats-up"></i> </div>
+                  </div>
+                <div class="crm_body">
+                  <h4>₹{{sales}}</h4>
+                  <p>Total Export Price</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="single_crm"  style="height: 95%;">
+                <div class="crm_head crm_bg_2 d-flex align-items-center justify-content-between">
+                  <div class="thumb"> <i class="ti-package"></i></div> </div>
+                <div class="crm_body">
+                  <h4>{{t_prod}}</h4>
+                  <p>New Imports</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="single_crm"  style="height: 95%;">
+                <div class="crm_head crm_bg_3 d-flex align-items-center justify-content-between">
+                  <div class="thumb"> <i class="ti-pie-chart"></i> </div> </div>
+                <div class="crm_body">
+                  <h4>₹{{total_buy}}</h4>
+                  <p>Total Import Price</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4" style="height: 870px;">
+        <div class="white_card card_height_100 mb_30" style="height: 54%;overflow-y: scroll;">
+          <div class="white_card_header">
+            <div class="box_header m-0">
+                <div class="main-title">
+                    <h3 class="m-0">Staf Details</h3>
+                </div>
+                <div class="header_more_tool" onclick="showmsg('{{mont}} Staf Pay Record.')">
+                    <div class="dropdown">
+                        <span >
+                          <i class="ti-light-bulb"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+          <div class="white_card_body"> 
+            {% for s in staf_pay %}
+            <div class="single_user_pil d-flex align-items-center justify-content-between">
+              <div class="user_pils_thumb d-flex align-items-center">
+                <span class="f_s_14 f_w_400 text_color_11">{{s.name}}</span> </div>
+              <div class="user_info"> ₹{{s.pay}}</div>
+              <div class="action_btns d-flex">
+                <a href="{% url 'pay_history' %}" class="action_btn mr_10"> <span style="font-size: 15px;"> + </span> </a>
+            </div>
+            </div>
+            {% endfor %}
+            <div class="single_user_pil d-flex align-items-center justify-content-between">
+              <div class="user_pils_thumb d-flex align-items-center">
+                <span class="f_s_14 f_w_400 text_color_11">Total Paid</span> </div>
+              <div class="user_info"> ₹{{Total_pay_staf}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4" style="height: 870px;">
+        <div class="white_card card_height_100 mb_30" style="height: 54%;overflow-y: scroll;">
+          <div class="white_card_header">
+            <div class="box_header m-0">
+              <div class="main-title">
+                <h3 class="m-0">Today sale</h3> </div>
+                <div class="header_more_tool" onclick="showmsg('Today invoice and Sale_history.')">
+                  <div class="action_btns d-flex">
+                    <a href="{% url 'sale_history' %}" class="action_btn mr_10"> <span style="font-size: 15px;"> + </span> </a>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="white_card_body" style="position: relative;">
+            <div class="monthly_plan_wraper">
+              {% if check_today_sale != '0' %}
+              {% for s in today_sale %}
+              <div class="single_plan d-flex align-items-center justify-content-between">
+                <div class="plan_left d-flex align-items-center">
+                  <div class="thumb"> <i class="ti-face-smile"></i> </div>
+                  <div>
+                    <h5>{{s.name}}</h5> <span>₹{{s.payed}}</span> </div>
+                </div>
+              </div>
+              {% endfor %}
+              {% else %}
+              <div style="margin: 20%;">
+                No sale history Today
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4" style="height: 870px;">
+        <div class="white_card card_height_100 mb_30 overflow_hidden" style="height: 54%;">
+          <div class="white_card_header">
+            <div class="box_header m-0">
+              <div class="main-title">
+                <h3 class="m-0"> Last Month Sales Details</h3> </div>
+                <div class="header_more_tool" onclick="showmsg('{{lastmont}} full record.')">
+                  <div class="dropdown">
+                      <span >
+                        <i class="ti-light-bulb"></i>
+                      </span>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="white_card_body pb-0">
+            <div class="Sales_Details_plan">
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="single_plan d-flex align-items-center justify-content-between">
+                    <div class="plan_left d-flex align-items-center">
+                      <div class="thumb">  <i class="ti-user"></i> </div>
+                      <div>
+                        <h5>{{last_month_customer}}</h5> <span>Customers</span> </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="single_plan d-flex align-items-center justify-content-between">
+                    <div class="plan_left d-flex align-items-center">
+                      <div class="thumb"> <i class="ti-stats-up"></i></div>
+                      <div>
+                        <h5>₹{{last_sale}}</h5> <span>Total Export Price</span> </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="single_plan d-flex align-items-center justify-content-between">
+                    <div class="plan_left d-flex align-items-center">
+                      <div class="thumb"><i class="ti-package"></i></div>
+                      <div>
+                        <h5>{{stock_last}}</h5> <span>Stock Added</span> </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="single_plan d-flex align-items-center justify-content-between">
+                    <div class="plan_left d-flex align-items-center">
+                      <div class="thumb"><i class="ti-pie-chart"></i>  </div>
+                      <div>
+                        <h5>₹{{last_import}}</h5> <span> Total Import Price</span> </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="chart_wrap overflow_hidden" style="position: relative;">
+            <div id="chart4" style="min-height: 270px;">
+              <div id="apexcharts429g7nix" class="apexcharts-canvas apexcharts429g7nix light" style="width: 294px; height: 270px;">
+                <svg id="SvgjsSvg1122" width="294" height="270" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" class="apexcharts-svg" xmlns:data="ApexChartsNS" transform="translate(0, 0)" style="background: transparent;">
+                  <g id="SvgjsG1124" class="apexcharts-inner apexcharts-graphical" transform="translate(0, 0)">
+                    <defs id="SvgjsDefs1123">
+                      <clippath id="gridRectMask429g7nix">
+                        <rect id="SvgjsRect1126" width="297" height="273" x="-1.5" y="-1.5" rx="0" ry="0" fill="#ffffff" opacity="1" stroke-width="0" stroke="none" stroke-dasharray="0"></rect>
+                      </clippath>
+                      <clippath id="gridRectMarkerMask429g7nix">
+                        <rect id="SvgjsRect1127" width="296" height="272" x="-1" y="-1" rx="0" ry="0" fill="#ffffff" opacity="1" stroke-width="0" stroke="none" stroke-dasharray="0"></rect>
+                      </clippath>
+                    </defs>
+                    <g id="SvgjsG1135" class="apexcharts-xaxis" transform="translate(0, 0)">
+                      <g id="SvgjsG1136" class="apexcharts-xaxis-texts-g" transform="translate(0, -4)"></g>
+                    </g>
+                    <g id="SvgjsG1139" class="apexcharts-grid">
+                      <line id="SvgjsLine1141" x1="0" y1="270" x2="294" y2="270" stroke="transparent" stroke-dasharray="0"></line>
+                      <line id="SvgjsLine1140" x1="0" y1="1" x2="0" y2="270" stroke="transparent" stroke-dasharray="0"></line>
+                    </g>
+                    <g id="SvgjsG1129" class="apexcharts-area-series apexcharts-plot-series">
+                      <g id="SvgjsG1130" class="apexcharts-series" seriesName="NetxProfit" data:longestSeries="true" rel="1" data:realIndex="0">
+                        <path id="SvgjsPath1133" d="M0 270L0 135C20.58 135 38.22 157.5 58.8 157.5C79.38 157.5 97.02 67.5 117.6 67.5C138.17999999999998 67.5 155.82 135 176.39999999999998 135C196.98 135 214.61999999999998 22.5 235.2 22.5C255.78 22.5 273.42 22.5 294 22.5C294 22.5 294 22.5 294 270M294 22.5C294 22.5 294 22.5 294 22.5 " fill="rgba(151,103,253,0.2)" fill-opacity="1" stroke-opacity="1" stroke-linecap="butt" stroke-width="0" stroke-dasharray="0" class="apexcharts-area" index="0" clip-path="url(#gridRectMask429g7nix)" pathTo="M 0 270L 0 135C 20.58 135 38.22 157.5 58.8 157.5C 79.38 157.5 97.02 67.5 117.6 67.5C 138.17999999999998 67.5 155.82 135 176.39999999999998 135C 196.98 135 214.61999999999998 22.5 235.2 22.5C 255.78 22.5 273.42 22.5 294 22.5C 294 22.5 294 22.5 294 270M 294 22.5z" pathFrom="M -1 270L -1 270L 58.8 270L 117.6 270L 176.39999999999998 270L 235.2 270L 294 270"></path>
+                        <path id="SvgjsPath1134" d="M0 135C20.58 135 38.22 157.5 58.8 157.5C79.38 157.5 97.02 67.5 117.6 67.5C138.17999999999998 67.5 155.82 135 176.39999999999998 135C196.98 135 214.61999999999998 22.5 235.2 22.5C255.78 22.5 273.42 22.5 294 22.5C294 22.5 294 22.5 294 22.5 " fill="none" fill-opacity="1" stroke="#9767fd" stroke-opacity="1" stroke-linecap="butt" stroke-width="3" stroke-dasharray="0" class="apexcharts-area" index="0" clip-path="url(#gridRectMask429g7nix)" pathTo="M 0 135C 20.58 135 38.22 157.5 58.8 157.5C 79.38 157.5 97.02 67.5 117.6 67.5C 138.17999999999998 67.5 155.82 135 176.39999999999998 135C 196.98 135 214.61999999999998 22.5 235.2 22.5C 255.78 22.5 273.42 22.5 294 22.5" pathFrom="M -1 270L -1 270L 58.8 270L 117.6 270L 176.39999999999998 270L 235.2 270L 294 270"></path>
+                        <g id="SvgjsG1131" class="apexcharts-series-markers-wrap">
+                          <g class="apexcharts-series-markers">
+                            <circle id="SvgjsCircle1147" r="0" cx="0" cy="0" class="apexcharts-marker w3jw3x1jo no-pointer-events" stroke="#9767fd" fill="#9767fd" fill-opacity="1" stroke-width="3" stroke-opacity="0.9" default-marker-size="0"></circle>
+                          </g>
+                        </g>
+                        <g id="SvgjsG1132" class="apexcharts-datalabels"></g>
+                      </g>
+                    </g>
+                    <line id="SvgjsLine1142" x1="0" y1="0" x2="294" y2="0" stroke="#b6b6b6" stroke-dasharray="0" stroke-width="1" class="apexcharts-ycrosshairs"></line>
+                    <line id="SvgjsLine1143" x1="0" y1="0" x2="294" y2="0" stroke-dasharray="0" stroke-width="0" class="apexcharts-ycrosshairs-hidden"></line>
+                    <g id="SvgjsG1144" class="apexcharts-yaxis-annotations"></g>
+                    <g id="SvgjsG1145" class="apexcharts-xaxis-annotations"></g>
+                    <g id="SvgjsG1146" class="apexcharts-point-annotations"></g>
+                  </g>
+                  <g id="SvgjsG1137" class="apexcharts-yaxis" rel="0" transform="translate(-21, 0)">
+                    <g id="SvgjsG1138" class="apexcharts-yaxis-texts-g"></g>
+                  </g>
+                </svg>
+                <div class="apexcharts-legend"></div>
+                <div class="apexcharts-tooltip light">
+                  <div class="apexcharts-tooltip-title" style="font-family: Helvetica, Arial, sans-serif; font-size: 12px;"></div>
+                  <div class="apexcharts-tooltip-series-group"><span class="apexcharts-tooltip-marker" style="background-color: rgb(151, 103, 253);"></span>
+                    <div class="apexcharts-tooltip-text" style="font-family: Helvetica, Arial, sans-serif; font-size: 12px;">
+                      <div class="apexcharts-tooltip-y-group"><span class="apexcharts-tooltip-text-label"></span><span class="apexcharts-tooltip-text-value"></span></div>
+                      <div class="apexcharts-tooltip-z-group"><span class="apexcharts-tooltip-text-z-label"></span><span class="apexcharts-tooltip-text-z-value"></span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="apexcharts-xaxistooltip apexcharts-xaxistooltip-bottom light">
+                  <div class="apexcharts-xaxistooltip-text" style="font-family: Helvetica, Arial, sans-serif; font-size: 12px;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="resize-triggers">
+              <div class="expand-trigger">
+                <div style="width: 295px; height: 271px;"></div>
+              </div>
+              <div class="contract-trigger"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4" style="margin-top: -30%;" style="height: 870px;">
+        <div class="white_card card_height_100 mb_20 " style="height: 76%;overflow-y: scroll;">
+          <div class="white_card_header">
+            <div class="box_header m-0">
+              <div class="main-title">
+                <h3 class="m-0">Trending Products</h3> </div>
+                <div class="header_more_tool" onclick="showmsg('Most sale product list from invoice and salehistory .')">
+                  <div class="dropdown">
+                      <span >
+                        <i class="ti-light-bulb"></i>
+                      </span>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="white_card_body QA_section">
+            <div class="QA_table ">
+              <!-- table-responsive -->
+              <table class="table lms_table_active2 p-0" style="margin-left: -7%;">
+                <thead>
+                  <tr>
+                    <th scope="col">Product </th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Sold rate</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for p in trend %}
+                  <tr>
+                    <td>
+                      <div class="customer d-flex align-items-center">
+                        <div class="thumb_34 mr_15 mt-0">
+                          <i class="ti-stats-up"></i>
+                        </div>
+                         <span class="f_s_12 f_w_600 color_text_5">{{p.name}}</span> </div>
+                    </td>
+                    <td class="f_s_12 f_w_400 color_text_6">₹{{p.Sale_price}}</td>
+                    <td class="f_s_12 f_w_400 color_text_7">{{p.trend}}%</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4" style="margin-top: -30%;"  style="height: 870px;">
+        <div class="white_card card_height_100 mb_30" style="height:fit-content;">
+          <div class="white_card_header">
+            <div class="box_header m-0">
+              <div class="main-title">
+                <h3 class="m-0">Add new Customer</h3> 
+              </div>
+              <div class="header_more_tool" onclick="showmsg('Create customer to generate invoice Fast.')">
+                <div class="dropdown">
+                    <span >
+                      <i class="ti-light-bulb"></i>
+                    </span>
+                </div>
+            </div>
+            </div>
+          </div>
+          <div class="white_card_body">
+            <div class="thumb mb_30">
+               <img src="{% static 'customer.png' %}" alt="" class="img-fluid">
+               </div>
+            <div class="common_form">
+              <form >
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="common_input mb_15">
+                      <input type="text" id="fullname" placeholder="Full Name"> </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <div class="common_input mb_15">
+                      <input type="number" id='contact' placeholder="Contact"> </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <div class="common_input mb_15">
+                      <input type="text" id="address" placeholder="Address"> </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="create_report_btn mt_30"> 
+                      <a onclick="create_cust()" style="color: white;cursor: pointer;" class="btn_1 radius_btn d-block text-center">Create New</a> </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4" style="margin-top: -30%;"  style="height: 870px;">
+        <div class="white_card card_height_100 mb_30" style="height: 76%;overflow-y: scroll;">
+          <div class="white_card_header">
+            <div class="box_header m-0">
+                <div class="main-title">
+                    <h3 class="m-0">Attendance Persent [{{mont}}] </h3>
+                </div>
+                <div class="header_more_tool" onclick="showmsg('{{mont}} Shop open close absent persent record')">
+                    <div class="dropdown">
+                        <span >
+                          <i class="ti-light-bulb"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+          <div class="white_card_body"> 
+            {% for s in staf_aden %}
+            <div class="single_user_pil d-flex align-items-center justify-content-between">
+              <div class="user_pils_thumb d-flex align-items-center">
+                <span class="f_s_14 f_w_400 text_color_11">{{s.name}}</span> </div>
+              <div class="user_info"> {{s.persent}} Days</div>
+            </div>
+            {% endfor %}
+            <div class="single_user_pil d-flex align-items-center justify-content-between">
+              <div class="user_pils_thumb d-flex align-items-center">
+                <span class="f_s_14 f_w_400 text_color_11">Shop Open</span> </div>
+              <div class="user_info"> {{stotal_shop_opend}} Days</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-12">
+        <div class="white_card card_height_100 mb_30">
+          <div class="white_card_header">
+            <div class="row align-items-center">
+              <div class="col-lg-4">
+                <div class="main-title">
+                  <h3 class="m-0">Customer Details</h3> </div>
+                  <div class="header_more_tool" onclick="showmsg('All time customer list.')">
+                    <div class="dropdown">
+                        <span >
+                          <i class="ti-light-bulb"></i>
+                        </span>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="white_card_body ">
+            <div class="row min_height_oveflow">
+              <div class="col-lg-4 mb_30">
+                {% for c in all_cust1 %}
+                <div class="single_user_pil d-flex align-items-center justify-content-between">
+                  <div class="user_pils_thumb d-flex align-items-center">
+                    <div class="thumb_34 mr_15 mt-0">
+                      <i class="ti-user"></i>
+                    </div> <span class="f_s_14 f_w_400 text_color_11">{{c.name}}</span> </div>
+                  <div class="user_info">+91-{{c.contact}} <br>{{c.address}} </div>
+                </div>
+                {% endfor %}
+              </div>
+              <div class="col-lg-4 mb_30">
+                {% for c in all_cust2 %}
+                <div class="single_user_pil d-flex align-items-center justify-content-between">
+                  <div class="user_pils_thumb d-flex align-items-center">
+                    <div class="thumb_34 mr_15 mt-0">
+                      <i class="ti-user"></i>
+                    </div> <span class="f_s_14 f_w_400 text_color_11">{{c.name}}</span> </div>
+                  <div class="user_info">{{c.contact}} <br>{{c.address}} </div>
+                </div>
+                {% endfor %}
+              </div>
+              <div class="col-lg-4 mb_30">
+                {% for c in all_cust3 %}
+                <div class="single_user_pil d-flex align-items-center justify-content-between">
+                  <div class="user_pils_thumb d-flex align-items-center">
+                    <div class="thumb_34 mr_15 mt-0">
+                      <i class="ti-user"></i>
+                    </div> <span class="f_s_14 f_w_400 text_color_11">{{c.name}}</span> </div>
+                  <div class="user_info">{{c.contact}} <br>{{c.address}} </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</span>
+</body>
+{% endblock %}
+{% block js %}
+<script>
+  function create_cust(){
+    $.ajax({
+                url:location.href,
+                type:'POST',
+                data:{
+                    name:document.getElementById('fullname').value,
+                    contact:document.getElementById('contact').value,
+                    address:document.getElementById('address').value,
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                },
+                success:function(e){
+                    $("#dashbody").load(location.href + " #dashbody")
+                    showmsg(e)
+                },
+            });
+  }
+</script>
+{% endblock %}

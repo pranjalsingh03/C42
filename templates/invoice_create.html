@@ -1,0 +1,354 @@
+{% extends 'base.html' %}
+{% block css %}
+<style>
+
+    html, body {
+    min-height: 100%;
+    }
+    body, div, form, input, select, p { 
+    padding: 0;
+    margin: 0;
+    outline: none;
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 16px;
+    color: #eee;
+    }
+    body {
+    background: url("/static/background.jpg") no-repeat center;
+    background-size: cover;
+    }
+    h1, h2 {
+    text-transform: uppercase;
+    font-weight: 400;
+    }
+    h2 {
+    margin: 0 0 0 8px;
+    }
+    .main-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 25px;
+    background: rgba(0, 0, 0, 0); 
+    }
+    .left-part, form {
+    padding: 25px;
+    }
+    .left-part {
+    text-align: center;
+    }
+    .fa-graduation-cap {
+    font-size: 72px;
+    }
+    form {
+    background: rgba(255, 255, 255, 0.712); 
+    border-radius: 10px;
+    box-shadow: rgba(113, 122, 132, 0.2) 0px 8px 24px;
+    }
+    .title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    color: black;
+    }
+    .info {
+    display: flex;
+    flex-direction: column;
+    }
+    input, select {
+    padding: 5px;
+    margin-bottom: 30px;
+    background: transparent;
+    border: none;
+    color: rgb(100, 75, 209);
+    border-bottom: 1px solid #eee;
+    }
+    input::placeholder {
+    color: rgb(100, 75, 209);
+    }
+
+    .btn-item, button {
+    padding: 10px 5px;
+    margin-top: 20px;
+    border-radius: 5px; 
+    border: none;
+    background: #26a9e0; 
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 400;
+    color: #fff;
+    }
+    .btn-item {
+    display: inline-block;
+    margin: 20px 5px 0;
+    }
+    button {
+    width: 100%;
+    background-color: #53ff29;
+    }
+    button:hover, .btn-item:hover {
+    background: white;
+    color: black;
+    }
+    @media (min-width: 568px) {
+    html, body {
+    height: 100%;
+    }
+    .main-block {
+    flex-direction: row;
+    height: calc(100% - 50px);
+    }
+    .left-part, form {
+    flex: 1;
+    height: auto;
+    }
+    }
+  </style>
+
+<style>
+  .popupback{
+    z-index: 10;
+    background-color: #282222a8;
+    width: 100%;height: 100%;
+    position: absolute;
+    display: none;
+    justify-content: center;
+  }
+  .popbox{
+    width: 600px;
+    height: 400px;
+    background-color: white;
+    margin-top: 5%;
+    border-radius: 10px;
+    box-shadow: rgba(113, 122, 132, 0.2) 0px 8px 24px;
+  }
+  #addp:hover{
+    color: rgb(255, 0, 0);
+  }
+</style>
+{% endblock %}
+{% block body %}
+<body style="overflow:hidden ;">
+    <div class="popupback">
+      <div class="popbox">
+        <a class="btn-item" style="width: 90%;background-color: rgb(72 255 25); margin: 3%;"> <i class="ti-menu-alt"></i> Custom Products List </a>
+        <span style="position: relative;">
+          <span onclick="customelist()"   style="cursor: pointer;margin-left: -8px;margin-top: -1px;position: absolute;background: red;padding-left: 6px;padding-right: 6px;border-radius: 16%;font-size: 21px;">X</span>
+        </span>
+        <div style=" display: grid; justify-content: center; ">
+          <input type="text" name="prodname" id="prodname" placeholder="Product Name"> <br>
+          <input type="number" name="prodprice" id="prodprice" placeholder="Product Price">
+          <input type="number" name="prodquantity" id="prodquantity" placeholder="Product Quantity">
+          <input type="text" name="proddec" id="proddec" placeholder="Product Descripton" style="width: 450px;">
+          <a onclick="add_custome_prod()" class="btn-item" style="width: 32%;background-color: rgb(255 135 65);margin: 3%;display: flex;justify-content: center;"> Add </a>
+        </div>
+      </div>
+    </div>
+    <div style="z-index: 5;" class="main-block">
+      <div class="left-part">
+        <span id='clear_cart'>
+        <div class="btn-group" style="height: 500px;overflow-y: scroll;margin-top: -10%;margin-bottom: -5%;-webkit-overflow-scrolling: touch;">
+          <a class="btn-item" style="width: 90%;background-color: rgb(72 255 25);">Invoice Product 
+            <span onclick="customelist()" id="addp" style="float: right;margin-right: 10px;font-size: 30px;margin-bottom: -14px;margin-top: -7px;cursor: pointer;">+</span></a>
+          
+          {% for c in inv_cart %}
+          <div>
+            <span style="position: relative;">
+              <span id="{{c.id}}" onclick="remov_cart(this)"  style="  cursor: pointer; margin-top: 13px;position: absolute;background: red;padding-left: 6px;padding-right: 7px;border-radius: 16%;">X</span>
+          </span>
+            <a  class="btn-item" style="width: 90%; background-color: white;color: black;"> <span style="float: left;margin-left: 8.5%;">Name:  {{c.name}} </span></a>
+          <a  class="btn-item" style="margin-top: -2%;width: 90%; background-color: white;color: black;">
+                <span style="float: left; width: 30%;color: black;">Price: ₹{{c.price}} </span>
+                <input type="number" autocomplete="off" style="float: right; width: 30%;color: black;" name="" tl='qun' onkeyup="in_up(this)" value="{{c.quantity}}" id="{{c.id}}">
+         </a>
+          <a class="btn-item" style="margin-top: -2%; width: 90%; background-color: white;color: black;">
+            <textarea name="{{c.id}}d" autocomplete="off" placeholder="Enter Descripton here !!" id="{{c.id}}" tl='dec' onkeyup="in_up(this)" style="width: 90%;height: 100%;">{{c.dec}}</textarea> <br>
+            <span style="cursor: pointer; background-color: skyblue; padding: 4px; border-radius: 9px; float: left; margin-left: 20px; " id="{{c.id}}" onclick='emei(this)' >IMEI</span>
+          </a>
+          </div>
+          {% endfor %}
+        </div>
+      </span>
+      </div>
+      <form action="{% url 'invoice_gen' %}" method="POST" enctype="multipart/form-data" style=" margin-top: -3%; height: 90%;overflow-y: scroll;">
+        <div class="title">{% csrf_token %}
+          <i class="ti-pencil"></i> 
+          <h2>Customer details</h2>
+          <span id="c_badge" style="margin: 2%; background-color: #4aff0f;padding: 1%;border-radius: 12px;"> <i class="ti-tag"></i> New User</span>
+        </div>
+        <span id="formbody">
+        <div class="info">
+          <select name="oldone" id="oldc">
+            <option value="Old">Select From old customer</option>
+            {% for c in customers %}
+            <option value="{{c.id2}}">{{c.name}} | {{c.address}}</option>
+            {% endfor %}
+          </select>
+          
+          <input class="fname" autocomplete="nope" type="text" id="customer_name"   name="customer_name" placeholder="Customer Full name">
+          <input type="text" autocomplete="nope" name="address" id="address"  placeholder="Address">
+          <input type="number" autocomplete="nope" name="Phone_number" id="Phone_number"  placeholder="Phone number">
+          <input type="text" autocomplete="nope" name="gst_no" id="gst_no"  style="display: none;"  placeholder="GST No.">
+          <input type="number" autocomplete="nope" name="gst_per" id="gst_per" value="18"  style="display: none;"  placeholder="GST percentage.">
+          <input type="number" autocomplete="nope" name="discount"  id="discount" placeholder="Ex - ₹100 off">
+          <select id="type_in" name="invoice_type">
+            <option value="Normal_Invoice" id="normal" style="background-color: rgba(255, 255, 255, 0);" >Normal Invoice</option>
+            <option value="Gst_Invoice"  style="background-color: rgba(255, 255, 255, 0);">Gst_Invoice</option>
+          </select>
+          <select name="paymod">
+            <option value="Cash">Cash</option>
+            <option value="PhonePe">PhonePe</option>
+            <option value="GooglePay">GooglePay</option>
+            <option value="Card">Card</option>
+          </select>
+        </div>
+      </span>
+      <span id="invoicegen">
+        {% if ins != 0 %}
+        <button type="submit">Submit</button>
+        {% else %}
+        <button style="cursor: no-drop;" disabled>Submit</button>
+          {% endif %}
+      </span>
+      </form>
+      <div id="fotmenu" style="margin-left: 0%;">
+        {% if ins != 0 %}
+          |<span class="fotrow" onclick="clearcart()" >Clear list</span>|
+          {% else %}
+          |<span  class="fotrow" onclick="showmsg('No item in the list')" >Clear list</span>|
+          {% endif %}
+          <span  class="fotrow" > <a style="all: unset;" href="{% url 'invoice_list' %}">invoice_history</a></span>|
+          <span  class="fotrow" > <a style="all: unset;" href="{% url 'sale_history' %}">Sell history</a></span>|
+          <span  class="fotrow" > <a style="all: unset;"  href="{% url 'products' %}" >All Products</a></span>|
+      </div>
+    </div>
+</body>
+{% endblock %}
+{% block js %}
+<script>
+  function add_custome_prod(){
+    $.ajax({
+      url:location.href,
+      type:'GET',
+      data:{
+        custome:'true',
+        prodname:$('#prodname').val(),
+        prodqunt:$('#prodquantity').val(),
+        proddec:$('#proddec').val(),
+        prodprice:$('#prodprice').val(),
+      },
+      success:function(e){
+       $('#clear_cart').load(location.href + ' #clear_cart');
+       $('#invoicegen').load(location.href + ' #invoicegen');
+        showmsg(e);
+        $('#prodname').val('');
+        $('#prodquantity').val('');
+        $('#proddec').val('');
+        $('#prodprice').val('');
+      },
+    })
+  }
+  function customelist(){
+    if(document.getElementsByClassName('popupback')[0].style.display == 'flex'){
+      document.getElementsByClassName('popupback')[0].style.display = 'none'
+    }
+    else{
+      document.getElementsByClassName('popupback')[0].style.display = 'flex'
+    };
+  };
+</script>
+<script>
+  function emei(btn){
+    var ids=btn.id + 'd'
+    document.getElementsByName(ids)[0].value ="IMEI-1:   | IMEI-2: "
+  }
+  function clearcart(){
+    $.ajax({
+      url:"{% url 'clear_cart' %}",
+      type:'GET',
+      data:{},
+      success:function(e){
+       $('#clear_cart').load(location.href + ' #clear_cart')
+        showmsg(e)
+      },
+    })
+  }
+  function remov_cart(btn){
+    $.ajax({
+      url:location.href,
+      type:'GET',
+      data:{
+        ids:btn.id,
+      },
+      success:function(e){
+       $('#clear_cart').load(location.href + ' #clear_cart')
+        showmsg(e)
+      },
+    })
+  }
+    function editprice(btn){
+        document.getElementById(btn.id).contentEditable=true;
+        document.getElementById(btn.id).innerHTML +="<i onclick='saveprice("+String(btn.id)+")' class='ti-check'></i>";
+      };
+    var oldc=document.getElementById('oldc')
+    var names=document.getElementById('customer_name')
+    var address=document.getElementById('address')
+    var Phone_number=document.getElementById('Phone_number')
+    var gst_no=document.getElementById('gst_no')
+    var discount=document.getElementById('discount')
+    var type_in=document.getElementById('type_in')
+    var customer={}
+    type_in.addEventListener('change',function(){
+      var c=document.getElementById('gst_no').style.display
+      if(c == 'block'){
+        document.getElementById('gst_no').style.display='none';
+        document.getElementById('gst_per').style.display='none';
+        document.getElementById('discount').style.display='block';
+      }else{
+        document.getElementById('discount').style.display='none';
+        document.getElementById('gst_no').style.display='block';
+        document.getElementById('gst_per').style.display='block';
+      };
+    });
+    {% for c in customers %}
+    customer['{{c.id2}}']={'name':'{{c.name}}','contact':'{{c.contact}}','address':'{{c.address}}','gst_no':'{{c.gst_no}}' ,'badge':'{{c.badge}}'}
+    {% endfor %}
+    oldc.addEventListener('change',function(){
+      name1=oldc.value
+      if(oldc.value == 'Old'){
+        document.getElementById('customer_name').value=''
+        document.getElementById('address').value=''
+        document.getElementById('Phone_number').value=''
+        document.getElementById('gst_no').value=''
+        document.getElementById('c_badge').innerHTML="<i class='ti-medall'></i> New" 
+      }else{
+        document.getElementById('customer_name').value=customer[name1]['name']
+        document.getElementById('address').value=customer[name1]['address']
+        document.getElementById('Phone_number').value=customer[name1]['contact']
+        document.getElementById('gst_no').value=customer[name1]['gst_no']
+        document.getElementById('c_badge').innerHTML="<i class='ti-medall'></i>" + customer[name1]['badge']
+      }
+      });
+     function in_up(btn){
+        if(String(btn.attributes.tl.value) == 'qun'){
+          var typ='quantity'
+        }else{
+          var typ='dec'
+        }
+       $.ajax({
+         type:'GET',
+         url:"{% url 'invoice_cart_update' %}",
+         data:{
+           id:btn.id,
+           typ:typ,
+           data:btn.value
+         },
+         success:function(e){
+         },
+       })
+     };
+</script>
+
+{% endblock %}

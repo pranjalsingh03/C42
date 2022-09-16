@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'table.css' %}">
+<style>
+    .row .cell:nth-child(1){
+        width: 45px;
+        padding-left: 20px;
+    }
+    .row .cell:nth-child(4){
+        opacity: 100%;
+    }
+    .badge{
+    padding: 4%;
+    border-radius: 12px;
+    padding-left: 14px;
+    padding-right: 14px;
+    box-shadow: rgba(113, 122, 132, 0.2) 0px 8px 24px;
+    }
+	.row .cell:nth-child(2){
+		width: 90px;
+	}
+</style>
+{% endblock %}
+
+{% block body %}
+<body >
+	<div class="limiter" style="z-index: 0;" id="invoice_list" >
+		<div class="container-table100">
+			<div class="wrap-table100">
+				<span id="invoicetable">
+				<div class="table">
+					<div class="row header">
+						<div class="cell"> Invoice Id </div>
+						<div class="cell" style="width: 165px;"> Date </div>
+						<div class="cell"> Customer </div>
+						<div class="cell"> Total </div>
+						<div class="cell"> Type </div>
+						<div class="cell"> Update </div>
+					</div>
+                    {% for s in invoices %}
+					<div class="row">
+					{% if s.state == 'wrong' %}<div class="cell" style="color: red;" data-title="id">{% else %}<div class="cell" data-title="id">{% endif %}
+						<form action="" method="post" style="all: unset;">{% csrf_token %} <input type="hidden" name="ids" value="{{s.id2}}"> 
+							<button type="submit" style="all: unset;">{{s.id2}}</button>
+						</form>
+					</div>
+					{% if s.state == 'wrong' %}<div class="cell" style="color: red;" data-title="date" style="width: 165px;">{% else %}<div class="cell" data-title="date" style="width: 165px;">{% endif %}
+						{{s.order_date}} 
+					</div>
+					{% if s.state == 'wrong' %}<div class="cell" style="color: red;" data-title="name">{% else %}<div class="cell" data-title="name">{% endif %}
+							{{s.customer}} 
+					</div>
+					{% if s.state == 'wrong' %}<div class="cell" style="color: red;" data-title="apid">{% else %}<div class="cell" data-title="apid">{% endif %}
+							₹{{s.total_paid}} 
+					</div>
+					{% if s.state == 'wrong' %}<div class="cell" style="color: red;" data-title="type">{% else %}<div class="cell" data-title="type">{% endif %}
+							{{s.inv_type}} 
+					</div>
+					<div class="cell" data-title="type">
+							<select name="{{s.id2}}" onchange="invoice_update(this)" id="inv_update">
+								{% if s.state == 'correct' %}
+								<option value="{{s.state}}" selected>{{s.state}}</option>
+								<option style="color: red;" value="wrong">wrong</option>
+								{% elif s.state == 'wrong' %}
+								<option style="color: red;" value="{{s.state}}" selected>{{s.state}}</option>
+								<option value="correct">correct</option>
+								{% endif %}
+							</select>
+						</div>
+					</div>
+                    {% endfor %}
+				</div>
+			</span>
+			</div>
+		</div>
+	</div>
+</body>
+{% endblock %}
+{% block js %}
+<script>
+	    function invoice_update(btn){
+        $.ajax({
+            url:location.href,
+            type:'POST',
+            data:{
+                up_value:document.getElementById('inv_update').value,
+				id_inv:btn.name,
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+            },
+            success:function(e){
+                $('#invoicetable').load(location.href + ' #invoicetable')
+                showmsg(e);
+            },
+        });
+    };
+</script>
+{% endblock %}

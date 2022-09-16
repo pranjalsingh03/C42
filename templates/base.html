@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <title>BharatMobiles | Management system</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="minimum-scale=1">
+        <link  href="{% static 'favicon.png' %}" rel="icon" type="image/png">
+	<link rel="stylesheet" type="text/css" href="{% static 'themify-icons.css' %}">
+    {% block css %}
+    {% endblock %}
+    <style> 
+      .fotrow{
+        margin-left: 5px;
+        margin-right: 5px;
+        cursor: pointer;
+      }
+      .fotrow:hover{
+        color: rgb(255, 72, 0);
+      }
+      #fotmenu{
+      position: fixed;
+      bottom: 0px;
+      margin-left: 20%;
+      color: white;
+      width: 60%;
+      background-color: #4cff4c;
+      padding: 4px;
+      border-radius: 30px 30px 0px 2px;
+      height: 4%;
+      display: flex;
+      justify-content: center;
+      box-shadow: rgb(255 255 255 / 43%) 0px 1px 4px, rgb(255 255 255 / 46%) 0px 0px 0px 3px;
+    }
+    </style>
+    <style>
+        .msg {
+      position: fixed;
+      z-index: 56;
+      width: fit-content;
+      height: fit-content;
+      top: 1%;
+      right: 2%;
+      padding: 10px 20px;
+      display: none;
+      border-radius: 5px;
+      font-size: 18px;
+      background: #69ff7c;
+      color: white;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .1), 0 4px 6px -2px rgba(0, 0, 0, .05);
+      transition: transform ease-in-out .2s
+    }
+    .show.msg {
+      display: block;
+      animation: fadeInAnimation ease 0.2s;
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+    }
+    
+    @keyframes fadeInAnimation {
+      0% {
+          margin-top: -10px;
+      }
+      100% {
+        margin-top: 10px;
+      }
+    }
+    </style>
+</head>
+
+{% if messages %}
+{% for message in messages %}
+<div id="msgbox1" class="msg show"><i class="ti-light-bulb"></i>{{ message }}</div>
+{% endfor %}
+<script>
+var maggio1 = document.querySelector("#msgbox1");
+setTimeout(function(){maggio1.classList.remove('show')},3000);
+</script>
+{% else %}
+<div id="msgbox" class="msg"><i class='ti-light-bulb'></i> <span id='main-msg'></span> </div>
+{% endif %}
+{% block body %}
+{% endblock %}
+</html>
+<script>
+        var maggio = document.querySelector("#msgbox");
+function showmsg(txt){
+	document.getElementById('main-msg').innerText=String(txt);
+    maggio.classList.add('show');
+    setTimeout(function(){maggio.classList.remove('show')},3000);
+};
+</script>
+<script src="{% static 'jquery-3.3.1.min.js' %}"></script>
+{% block js %}
+{% endblock %}

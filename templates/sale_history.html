@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'table.css' %}">
+{% endblock %}
+
+{% block body %}
+<body>
+	<div class="limiter" style="z-index: 0;" >
+		<div class="container-table100">
+			<div class="wrap-table100">
+                <span id="selltable">
+                <div id="prod_list">
+				<div class="table">
+					<div class="row header">
+						<div class="cell"> Product Name  </div>
+						<div class="cell"> Date </div>
+						<div class="cell"> Price </div>
+						<div class="cell" style="opacity: 100%;" onclick="Add()"> <i class="ti-bookmark" style="opacity: 100%;"></i> Add </div>
+					</div>
+                    <div class="row" id="new_prod_add" style="display: none;">
+                        <div class="cell" style="display: inline-flex;"> <i class="ti-pencil"></i> 
+                                <input type="text" id="newprodname" placeholder="Product_name\Remark" >
+                         </div>
+                        <div class="cell">{{date}} </div>
+                        <div class="cell"> <input type="number" style="width: 90%;" id="newprodprice" placeholder="SalePrice"> </div>
+                        <div class="cell" onclick="add_history(this)" style="padding: 15px;opacity: 100%;"> <i class="ti-cloud-up"></i>Add </div>
+                    </div>
+                    {% for h in history %}
+					<div class="row">
+						<div class="cell" data-title="ProductName" > {{h.detail}}</div>
+						<div class="cell" data-title="ProductCategory"> {{h.date}} </div>
+						<div class="cell" data-title="Productsale_price" > ₹ {{h.total}}</div>
+						<div class="cell" data-title="actions" style="opacity: 100%;">
+                        <span id="{{p.id}}" onclick="showmsg('working on it')">
+                            <i class="ti-control-backward"></i>
+                        </span>
+                        </div>
+					</div>
+                    {% endfor %}
+				</div>
+            </div>
+        </span>
+			</div>
+		</div>
+	</div>
+</body>
+{% endblock %}
+
+{% block js %}
+<script>
+    function Add(){
+        var ch=document.getElementById('new_prod_add').style.display
+        if(ch == 'none'){
+            document.getElementById('new_prod_add').style.display=''
+        }else{
+            document.getElementById('new_prod_add').style.display='none'
+        }
+    };
+    function add_history(btn){
+        $.ajax({
+            url:location.href,
+            type:'POST',
+            data:{
+                detail:document.getElementById('newprodname').value,
+                price:document.getElementById('newprodprice').value,
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+            },
+            success:function(e){
+                $('#selltable').load(location.href + ' #selltable')
+                showmsg(e);
+            },
+        });
+    };
+
+</script>
+{% endblock %}

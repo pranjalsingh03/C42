@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link href="{% static 'home.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+{% endblock %}
+{% block body %}
+
+<body>
+    <div class="s006">
+        <form action="{% url 'products' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+            <legend><img src="{% static 'logo2.png' %}" alt="" srcset=""></legend>
+            <fieldset>
+                <div class="inner-form" >
+                    <div class="input-field">
+                        <button class="btn-search" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <path
+                                    d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z">
+                                </path>
+                            </svg>
+                        </button>
+                        <input id="search" type="text" autocomplete="off" name="query" placeholder="" />
+                    </div>
+                </div>
+                <div class="suggestion-wrap">
+                    <a href="{% url 'products' %}" target="_blank" rel="noopener noreferrer"> <span
+                            style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">All Products</span></a>
+                    <a href="{% url 'invoice_create' %}" target="_blank" rel="noopener noreferrer">
+                        <span style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;"> Create Invoice</span></a>
+                    <a href="{% url 'staf' %}" target="_blank" rel="noopener noreferrer">
+                        <span style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">Attendence</span></a>
+                    <a href="{% url 'report' %}" rel="noopener noreferrer">
+                        <span style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">Report</span></a>
+                    <a href="{% url 'note' %}"  target="_blank" rel="noopener noreferrer">
+                        <span style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">Notes</span></a>
+                    <a onclick="backup()"  rel="noopener noreferrer">
+                        <span style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">Backup Now</span></a>
+
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+</body>
+{% endblock %}
+{% block js %}
+<script>
+    function backup(){
+        document.getElementById('msgbox').style.display='block';
+        document.getElementById('msgbox').innerHTML ="<div class='spinner-border' role='status' style='width: 19px;height: 19px;'><span class='sr-only'></span></div><span id='main-msg'> Generating backup wait .... </span> ";
+        $.ajax({
+            url:"{% url 'backup' %}",
+            type:'GET',
+            data:{},
+            success:function(e){
+                document.getElementById('msgbox').innerHTML= "<i class='ti-light-bulb'></i>" + String(e);
+            },
+        });
+    }
+</script>
+{% endblock %}

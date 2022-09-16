@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'table.css' %}">
+<style>
+    .row .cell:nth-child(1){
+        width: 45px;
+        padding-left: 20px;
+    }
+    .row .cell:nth-child(4){
+        opacity: 100%;
+    }
+    .badge{
+    padding: 4%;
+    border-radius: 12px;
+    padding-left: 14px;
+    padding-right: 14px;
+    box-shadow: rgba(113, 122, 132, 0.2) 0px 8px 24px;
+    }
+	.row .cell:nth-child(2){
+		width: 90px;
+	}
+</style>
+{% endblock %}
+
+{% block body %}
+<body >
+	<div class="limiter" style="z-index: 0;" id="attend_list" >
+		<div class="container-table100">
+			<div class="wrap-table100">
+                <span id="mainpay">
+				<div class="table">
+					<div class="row header">
+						<div class="cell"> Pay Id </div>
+						<div class="cell" style="width: 165px;"> Date </div>
+						<div class="cell"> Staf </div>
+						<div class="cell"> Amount </div>
+                        <div class="cell" onclick="Add()"> <i class="ti-bookmark"></i> Add </div>
+					</div>
+                    <div class="row" id="new_prod_add" style="display: none;">
+                        <div class="cell" style="display: inline-flex;">Create New </div>
+                        <div class="cell"> {{td}} </div>
+                        <div class="cell" > 
+                            <select id="stname">
+                             {% for c in stf %}
+                             <option value="{{c.name}}">{{c.name}}</option>
+                             {% endfor %}
+                            </select>
+                        </div>
+                        <div class="cell"> <input type="number" autocomplete="off" id="Amount" placeholder="Amount" style="width: 90%;"> </div>
+                        <div class="cell" onclick="addprod()" style="padding: 15px;"> <i class="ti-cloud-up"></i>Add </div>
+                    </div>
+                    {% for s in pays %}
+					<div class="row">
+						<div class="cell" data-title="id">{{s.id}}</div>
+						<div class="cell" data-title="date" style="width: 165px;"> {{s.pay_date}} </div>
+						<div class="cell" data-title="name"> {{s.staf_name}} </div>
+						<div class="cell" data-title="apid"> ₹{{s.pay}} </div>
+						<div class="cell" data-title="apid" ></div>
+					</div>
+                    {% endfor %}
+				</div>
+                </span>
+			</div>
+		</div>
+	</div>
+</body>
+{% endblock %}
+{% block js %}
+<script>
+        function Add(){
+        var ch=document.getElementById('new_prod_add').style.display
+        if(ch == 'none'){
+            document.getElementById('new_prod_add').style.display=''
+        }else{
+            document.getElementById('new_prod_add').style.display='none'
+        }
+    };
+    function addprod(){
+        $.ajax({
+                url:location.href,
+                type:'POST',
+                data:{
+                    name:document.getElementById('stname').value,
+                    pay:document.getElementById('Amount').value,
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                },
+                success:function(e){
+                    $("#mainpay").load(location.href + " #mainpay")
+                    showmsg(e)
+                },
+            });
+    }
+</script>
+{% endblock %}
