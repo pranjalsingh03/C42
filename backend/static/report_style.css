@@ -6366,7 +6366,6 @@ canvas#highlights {
 .weatcher_update_wrapper .weather_img_2 {
   background-color: #e5fffe;
   border-radius: 15px;
-  background-image: url(../img/weather_1.png);
   background-repeat: no-repeat;
   background-size: 100% auto;
   width: 100%;
@@ -6916,19 +6915,16 @@ canvas#highlights {
 
 /* line 375, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .custom_striped_progressbar .progress-bar.green_bar {
-  background-image: url(../img/progress/progress-bg.png);
   background-size: cover;
 }
 
 /* line 379, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .custom_striped_progressbar .progress-bar.yellow_bar {
-  background-image: url(../img/progress/design-progress-yellow.png);
   background-size: cover;
 }
 
 /* line 384, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .custom_striped_progressbar .progress-bar.red_bar {
-  background-image: url(../img/progress/design-progress-red.png);
   background-size: cover;
 }
 
@@ -8492,7 +8488,6 @@ canvas#highlights {
 /* line 657, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .social_media_card {
   background-color: #eee5ff;
-  background-image: url(../img/shape_2.svg);
   background-size: cover;
   background-position: top right;
   background-repeat: no-repeat;
@@ -8635,7 +8630,6 @@ canvas#highlights {
 .sales_card_wrapper {
   background-color: #f65365;
   position: relative;
-  background-image: url(../img/plane_thumb.svg);
   background-repeat: no-repeat;
   background-size: cover;
   background-size: 100% 58%;
@@ -9180,7 +9174,6 @@ canvas#highlights {
   padding: 45px 50px;
   border-radius: 15px;
   background: #fff;
-  background-image: url(../img/dateBg.png);
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
@@ -9430,7 +9423,6 @@ canvas#highlights {
 .pswp__button,
 .pswp__button--arrow--left:before,
 .pswp__button--arrow--right:before {
-  background: url(../img/default-skin/default-skin.png) 0 0 no-repeat;
   background-size: 264px 88px;
   width: 44px;
   height: 44px;
@@ -9444,7 +9436,6 @@ canvas#highlights {
   .pswp--svg .pswp__button,
   .pswp--svg .pswp__button--arrow--left:before,
   .pswp--svg .pswp__button--arrow--right:before {
-    background-image: url(../img/default-skin/default-skin.svg);
   }
   /* line 60, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
   .pswp--svg .pswp__button--arrow--left,
@@ -11739,7 +11730,6 @@ a.pswp__share--download:hover {
   color: #59a0df;
 }
 
-/* line 224, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_active3 {
   font-size: 12px;
   font-weight: 700;
@@ -12400,7 +12390,6 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
   border: none !important;
 }
 
-/* line 17, G:/admin_project/8 admin/management_html/scss/_profilebox_new.scss */
 .custom-card.card .card-header {
   background-color: #fff;
   padding: 0px;
@@ -12410,7 +12399,6 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
   position: relative;
 }
 
-/* line 24, G:/admin_project/8 admin/management_html/scss/_profilebox_new.scss */
 .custom-card.card .card-header img {
   border-radius: 50%;
   margin-top: -100px;
@@ -12418,12 +12406,10 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
   transform: scale(1.5);
 }
 
-/* line 1, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .user_crm_wrapper {
   background: transparent;
 }
 
-/* line 6, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .user_crm_wrapper .single_crm {
   background: #fff;
   border-radius: 15px;
@@ -12431,38 +12417,32 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
   padding: 5px;
 }
 
-/* line 11, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .user_crm_wrapper .single_crm .crm_head {
   background: #ff7ea5;
   padding: 8px 20px;
   border-radius: 13px;
 }
 
-/* line 15, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .user_crm_wrapper .single_crm .crm_head i {
   color: #fff;
 }
 
-/* line 19, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .user_crm_wrapper .single_crm .crm_body {
   padding: 15px 23px;
 }
 
-/* line 21, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .user_crm_wrapper .single_crm .crm_body h4 {
   font-size: 22px;
   font-weight: 700;
   color: #242934;
 }
 
-/* line 26, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .user_crm_wrapper .single_crm .crm_body p {
   font-size: 14px;
   color: #9b9aba;
   font-weight: 400;
 }
 
-/* line 43, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .user_crm_wrapper .crm_reports_bnner h4 {
   font-size: 16px;
   font-weight: 700;
@@ -12470,7 +12450,6 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
   margin-bottom: 0;
 }
 
-/* line 49, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .user_crm_wrapper .crm_reports_bnner p {
   color: #c8b4de;
   font-size: 12px;
@@ -12479,36 +12458,30 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
   margin: 10px 0;
 }
 
-/* line 56, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .user_crm_wrapper .crm_reports_bnner a {
   color: #efc343;
   font-size: 10px;
   font-weight: 300;
 }
-
-/* line 64, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .crm_bg_1 {
   background: #20deff !important;
 }
 
-/* line 67, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .crm_bg_2 {
   background: #c388f6 !important;
 }
 
-/* line 70, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .crm_bg_3 {
   background: #f5f5ff !important;
 }
 
-/* line 72, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .crm_bg_3 i {
   color: #58377e !important;
 }
 
-/* line 76, G:/admin_project/8 admin/management_html/scss/_crm.scss */
+
 .max-width-220 {
   max-width: 220px;
 }
 
-/*# sourceMappingURL=style.css.map */
+
