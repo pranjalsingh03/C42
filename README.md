@@ -11,7 +11,7 @@
 
 > Github - https://github.com/Sd-Shivam/C42 
 
-> Try Now -  update soon
+> Try Now -  https://shopmanager.pythonanywhere.com
 
 
 
