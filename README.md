@@ -16,7 +16,7 @@
 
 
 
-### [👇] Soom Features:
+### [👇] Some Features:
 
 - [1] Create product list.
 - [2] Fast Project search result.
@@ -27,6 +27,7 @@
 - [7] workers attendence system.
 - [8] customers ranking system.
 - [9] sell & buy profit and loss anylizer.
+- [0] Not responsive to Mobile.
 
 
 
