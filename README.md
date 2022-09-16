@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://github.com/Sd-Shivam/C42-bharat/blob/master/download.png?raw=true" alt="SMS" width="240" />
+  <img src="https://github.com/Sd-Shivam/C42-bharat/blob/main/download.png?raw=true" alt="SMS" width="240" />
 
   <p align="center">Shop Management system 🎁 </p>
 </p>
@@ -51,4 +51,7 @@
 
 ## [😍] Contributing
 This project welcomes contributions. Join and make is more useful and better.
+ 
+ ## [✌️] Notice
+    For security purpose all commit history has been removed before making it public repo.
  
