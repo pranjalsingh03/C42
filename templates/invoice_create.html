@@ -1,6 +1,133 @@
 {% extends 'base.html' %}
 {% block css %}
-<link rel="stylesheet" type="text/css" href="{% static 'create_invoice.css' %}">
+<style>
+
+    html, body {
+    min-height: 100%;
+    }
+    body, div, form, input, select, p { 
+    padding: 0;
+    margin: 0;
+    outline: none;
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 16px;
+    color: #eee;
+    }
+    body {
+    background: url("/static/background.jpg") no-repeat center;
+    background-size: cover;
+    }
+    h1, h2 {
+    text-transform: uppercase;
+    font-weight: 400;
+    }
+    h2 {
+    margin: 0 0 0 8px;
+    }
+    .main-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 25px;
+    background: rgba(0, 0, 0, 0); 
+    }
+    .left-part, form {
+    padding: 25px;
+    }
+    .left-part {
+    text-align: center;
+    }
+    .fa-graduation-cap {
+    font-size: 72px;
+    }
+    form {
+    background: rgba(255, 255, 255, 0.712); 
+    border-radius: 10px;
+    box-shadow: rgba(113, 122, 132, 0.2) 0px 8px 24px;
+    }
+    .title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    color: black;
+    }
+    .info {
+    display: flex;
+    flex-direction: column;
+    }
+    input, select {
+    padding: 5px;
+    margin-bottom: 30px;
+    background: transparent;
+    border: none;
+    color: rgb(100, 75, 209);
+    border-bottom: 1px solid #eee;
+    }
+    input::placeholder {
+    color: rgb(100, 75, 209);
+    }
+
+    .btn-item, button {
+    padding: 10px 5px;
+    margin-top: 20px;
+    border-radius: 5px; 
+    border: none;
+    background: #26a9e0; 
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 400;
+    color: #fff;
+    }
+    .btn-item {
+    display: inline-block;
+    margin: 20px 5px 0;
+    }
+    button {
+    width: 100%;
+    background-color: #53ff29;
+    }
+    button:hover, .btn-item:hover {
+    background: white;
+    color: black;
+    }
+    @media (min-width: 568px) {
+    html, body {
+    height: 100%;
+    }
+    .main-block {
+    flex-direction: row;
+    height: calc(100% - 50px);
+    }
+    .left-part, form {
+    flex: 1;
+    height: auto;
+    }
+    }
+  </style>
+
+<style>
+  .popupback{
+    z-index: 10;
+    background-color: #282222a8;
+    width: 100%;height: 100%;
+    position: absolute;
+    display: none;
+    justify-content: center;
+  }
+  .popbox{
+    width: 600px;
+    height: 400px;
+    background-color: white;
+    margin-top: 5%;
+    border-radius: 10px;
+    box-shadow: rgba(113, 122, 132, 0.2) 0px 8px 24px;
+  }
+  #addp:hover{
+    color: rgb(255, 0, 0);
+  }
+</style>
 {% endblock %}
 {% block body %}
 <body style="overflow:hidden ;">
